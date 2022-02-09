@@ -6,3 +6,5 @@ const userSchema = new mongoose.Schema({
     email: String,
     createdAt: String
 });
+
+module.exports = mongoose.model('User', userSchema);
