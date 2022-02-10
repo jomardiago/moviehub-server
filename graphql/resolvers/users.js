@@ -12,7 +12,7 @@ const generateToken = ({ _id, email, username }) => {
 module.exports = {
     Mutation: {
         async register(_, args) {
-            let { username, email, password, confirmPassword } = args.registerInput;
+            let { username, email, password } = args.registerInput;
             const { errors, valid } = validateRegisterInput(args.registerInput);
             const user = await User.findOne({ username });
 
