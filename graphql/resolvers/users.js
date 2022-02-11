@@ -38,14 +38,14 @@ module.exports = {
                 const user = await User.findOne({ username });
 
                 if (!user) {
-                    throw new UserInputError('User not found', { errors: {general: 'User does not exists'} });
+                    throw new UserInputError('User not found', { errors: {form: 'User does not exists'} });
                 } else {
                     const match = await bcrypt.compare(password, user.password);
                     if (match) {
                         const token = generateToken(user);
                         return { ...user._doc, id: user._id, token };
                     } else {
-                        throw new UserInputError('User not found', { errors: {username: 'User does not exists'} });
+                        throw new UserInputError('User not found', { errors: {form: 'User does not exists'} });
                     }
                 }
             }

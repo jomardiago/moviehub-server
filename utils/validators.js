@@ -17,7 +17,7 @@ function validateRegisterInput({ username, email, password, confirmPassword }) {
     if (password.trim() === '') {
         errors.password = 'Password is required';
     } else if (confirmPassword.trim !== '' && confirmPassword !== password) {
-        errors.password = 'Passwords must match';
+        errors.confirmPassword = 'Passwords must match';
     }
 
     return { errors, valid: Object.keys(errors).length < 1 };
