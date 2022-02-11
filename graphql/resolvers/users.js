@@ -2,7 +2,7 @@ const { UserInputError } = require('apollo-server');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
-const { validateRegisterInput } = require('../../utils/validators.js');
+const { validateRegisterInput, validateLoginInput } = require('../../utils/validators.js');
 const User = require('../../models/User.js');
 
 const generateToken = ({ _id, email, username }) => {
@@ -26,6 +26,28 @@ module.exports = {
                 const result = await newUser.save();
                 const token = generateToken(result);
                 return { ...result._doc, id: result._id, token };
+            }
+        },
+        async login(_, args) {
+            const { errors, valid } = validateLoginInput(args.loginInput);
+            const { username, password } = args.loginInput;
+
+            if (!valid) {
+                throw new UserInputError('Errors', { errors });
+            } else {
+                const user = await User.findOne({ username });
+
+                if (!user) {
+                    throw new UserInputError('User not found', { errors: {general: 'User does not exists'} });
+                } else {
+                    const match = await bcrypt.compare(password, user.password);
+                    if (match) {
+                        const token = generateToken(user);
+                        return { ...user._doc, id: user._id, token };
+                    } else {
+                        throw new UserInputError('User not found', { errors: {username: 'User does not exists'} });
+                    }
+                }
             }
         }
     }
